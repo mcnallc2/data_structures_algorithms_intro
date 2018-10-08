@@ -47,6 +47,7 @@ int main ( int argc, char *argv[] ) {
 		//printf("%s%c\n", buffer, ((eor)? '\n':' '));  // double newline if eor is not 0
 
         add_to_hashtable(buffer, hash_table);
+		print_hashtable(hash_table);
 
 		//printf("%d", key);
 		//printf("\n");
@@ -67,6 +68,14 @@ void add_to_hashtable(char *name, Element *hash_table){
 
 void print_hashtable(Element *hash_table){
 
+	for(int i = 0; i < 1501; i++){
+
+		printf("%s", hash_table[i].Name);
+		printf("\t");
+		printf("%d", hash_table[i].Frequency);
+		printf("\n");
+
+	}
 
 
 }
