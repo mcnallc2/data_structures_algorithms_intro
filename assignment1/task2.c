@@ -4,7 +4,7 @@
 
 #define MAX_BUFFER 256 // Maximum string length this program can handle
 #define MAX_NAME_SIZE 256
-#define TABLE_SIZE 61
+#define TABLE_SIZE 71
 
 typedef struct Element{
 
@@ -27,7 +27,7 @@ int main ( int argc, char *argv[] ) {
 
     Element hash_table[TABLE_SIZE];
 
-	for(int i = 0; i < 61; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 		strcpy(hash_table[i].Name, "");
 		hash_table[i].Frequency = 0;
 	}
@@ -107,7 +107,7 @@ int add_to_hashtable(char *name, Element *hash_table){
 
 void print_hashtable(Element *hash_table){
 
-	for(int i = 0; i < 61; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 
 		if(hash_table[i].Frequency != 0){
 			
@@ -124,7 +124,7 @@ void print_hashtable(Element *hash_table){
 int count_hashtable(Element *hash_table){
 
 	int count = 0;
-	for(int i = 0; i < 61; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 		if(hash_table[i].Frequency != 0){
 			count++;
 		}
@@ -163,6 +163,6 @@ int hash2(char *s){
         hash = hash + *s;
         s++;
     }
-    hash = (hash * 11) % 61;
+    hash = (hash * 11) % TABLE_SIZE;
     return hash;
 }
