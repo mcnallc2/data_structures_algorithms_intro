@@ -23,7 +23,8 @@ int main ( int argc, char *argv[] ) {
 	FILE *f;		
 	char buffer[MAX_BUFFER];
 	char find[MAX_NAME_SIZE];
-	int collisions = 0;
+	int collisions = 0, terms;
+	double load;
 
     Element hash_table[TABLE_SIZE];
 
@@ -53,14 +54,23 @@ int main ( int argc, char *argv[] ) {
 		}
 	}
 
+	terms = count_hashtable(hash_table);
+	load = terms / TABLE_SIZE;
+
 	printf("names.csv loaded!!!\n\n");
+	printf("Capacity = ");
+	printf("%d", TABLE_SIZE);
+	printf("\n");
 	printf("Number of terms = ");
-	printf("%d", count_hashtable(hash_table));
+	printf("%d", terms);
 	printf("\n");
 	printf("Collisions = ");
 	printf("%d", collisions);
+	printf("\n");
+	printf("Load = ");
+	printf("%f", load);
+	printf("\n");
 	printf("\n\n");
-	//print_hashtable(hash_table);
 
 
 	// Always remember to close the file

@@ -4,7 +4,7 @@
 
 #define MAX_BUFFER 256 // Maximum string length this program can handle
 #define MAX_NAME_SIZE 256
-#define TABLE_SIZE 2000
+#define TABLE_SIZE 41
 
 typedef struct Element{
 
@@ -25,11 +25,12 @@ int main ( int argc, char *argv[] ) {
 	FILE *f;		
 	char buffer[MAX_BUFFER];
 	char find[MAX_NAME_SIZE];
-	int collisions = 0;
+	int collisions = 0, terms;
+	double load;
 
     Element hash_table[TABLE_SIZE];
 
-	for(int i = 0; i<2000; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 		strcpy(hash_table[i].Name, "");
 		hash_table[i].Frequency = 0;
 	}
@@ -54,13 +55,22 @@ int main ( int argc, char *argv[] ) {
 			collisions++;
 		}
 	}
+	terms = count_hashtable(hash_table);
+	load = terms / TABLE_SIZE;
 
 	printf("names.csv loaded!!!\n\n");
+	printf("Capacity = ");
+	printf("%d", TABLE_SIZE);
+	printf("\n");
 	printf("Number of terms = ");
-	printf("%d", count_hashtable(hash_table));
+	printf("%d", terms);
 	printf("\n");
 	printf("Collisions = ");
 	printf("%d", collisions);
+	printf("\n");
+	printf("Load = ");
+	printf("%f", load);
+	printf("\n");
 	printf("\n\n");
 	//print_hashtable(hash_table);
 
@@ -127,13 +137,14 @@ int add_to_hashtable(char *name, Element *hash_table){
 		}
 		//if the key is not empty but its only an anogram etc go to next key
 		key++;
+		key%=TABLE_SIZE;
 	}
 	return collision;
 }
 
 void print_hashtable(Element *hash_table){
 
-	for(int i = 0; i < 2000; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 
 		if(hash_table[i].Frequency != 0){
 			
@@ -150,7 +161,7 @@ void print_hashtable(Element *hash_table){
 int count_hashtable(Element *hash_table){
 
 	int count = 0;
-	for(int i = 0; i < 2000; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 		if(hash_table[i].Frequency != 0){
 			count++;
 		}
@@ -160,7 +171,7 @@ int count_hashtable(Element *hash_table){
 
 int search_table(char *find, Element *hash_table){
 
-	for(int i = 0; i < 2000; i++){
+	for(int i = 0; i < TABLE_SIZE; i++){
 
 		if(strcmp(find, hash_table[i].Name) == 0){
 			return i;
@@ -199,5 +210,6 @@ int hash1(char *s){
         hash = hash + *s;
         s++;
     }
+	hash = hash % TABLE_SIZE;
     return hash;
 }
