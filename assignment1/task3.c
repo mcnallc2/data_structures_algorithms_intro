@@ -56,7 +56,7 @@ int main ( int argc, char *argv[] ) {
 	}
 
 	terms = count_hashtable(hash_table);
-	load = terms / TABLE_SIZE;
+	load = (double)terms / (double)TABLE_SIZE;
 
 	printf("names.csv loaded!!!\n\n");
 	printf("Capacity = ");
