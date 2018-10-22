@@ -4,9 +4,8 @@
 
 #define SIZE 10000
 
-void quicksort(int array[], int left, int right);
-int partition(int array[], int left, int right);
-void swap(int array[], int i, int j);
+void bubblesort(int array[]);
+void swap(int array[], int j);
 void print(int array[]);
 int check(int array[], int random, int i);
 char check_sorted(int array[]);
@@ -53,7 +52,7 @@ int main (){
 
     swap_count = 0;
     comparisons = 0;
-    quicksort(Array1, left, right);
+    bubblesort(Array1);
     printf("\nTEST  : Unique random values\n");
     printf("SORTED: %c\n", check_sorted(Array1));
     printf("SWAPS : %d\n", swap_count);
@@ -61,7 +60,7 @@ int main (){
 
     swap_count = 0;
     comparisons = 0;
-    quicksort(Array2, left, right);
+    bubblesort(Array2);
     printf("\nTEST  : Random values\n");
     printf("SORTED: %c\n", check_sorted(Array2));
     printf("SWAPS : %d\n", swap_count);
@@ -69,7 +68,7 @@ int main (){
 
     swap_count = 0;
     comparisons = 0;
-    quicksort(Array3, left, right);
+    bubblesort(Array3);
     printf("\nTEST  : Ascending sorted list\n");
     printf("SORTED: %c\n", check_sorted(Array3));
     printf("SWAPS : %d\n", swap_count);
@@ -77,7 +76,7 @@ int main (){
 
     swap_count = 0;
     comparisons = 0;
-    quicksort(Array4, left, right);
+    bubblesort(Array4);
     printf("\nTEST  : Descending sorted list\n");
     printf("SORTED: %c\n", check_sorted(Array4));
     printf("SWAPS : %d\n", swap_count);
@@ -85,7 +84,7 @@ int main (){
 
     swap_count = 0;
     comparisons = 0;
-    quicksort(Array5, left, right);
+    bubblesort(Array5);
     printf("\nTEST  : Uniform list\n");
     printf("SORTED: %c\n", check_sorted(Array5));
     printf("SWAPS : %d\n", swap_count);
@@ -93,47 +92,27 @@ int main (){
 
 }
 
-void quicksort(int array[], int left, int right){
+void bubblesort(int array[]){
 
-    if(left < right){
-
-        int new_pivot = partition(array, left, right);
-
-
-        quicksort(array, left, (new_pivot -1));
-        quicksort(array, (new_pivot +1), right);
-    }
-}
-
-int partition(int array[], int left, int right){
-
-
-    int pivot = array[right];
-    int i = left;
-
-    for(int j = left; j <= (right - 1); j++){
-        comparisons++;
-        if(array[j] < pivot){
-            swap(array, i, j);
-            i++;
+    for(int i = 0; i < SIZE; i ++){
+        for(int j = 0; j < (SIZE - 1); j++){
+            comparisons++;
+            if(array[j] > array[j+1]){
+                swap_count++;
+                swap(array, j);
+            }
         }
     }
-    swap(array, i, right);
-    return i;
-
 }
 
-void swap(int array[], int i, int j){
+void swap(int array[], int j){
 
     int temp;
 
-    if(i != j){
-        temp = array[j];
-        array[j] = array[i];
-        array[i] = temp;
+    temp = array[j+1];
+    array[j+1] = array[j];
+    array[j] = temp;
 
-        swap_count++;
-    }
 }
 
 void print(int array[]){
