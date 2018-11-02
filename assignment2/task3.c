@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define MAX_BUFFER 256
-#define ARRAY_SIZE 20000
+#define ARRAY_SIZE 1000
 
 typedef struct Game{
 
@@ -64,12 +64,14 @@ int main ( int argc, char *argv[] ) {
 		return EXIT_FAILURE; 
 	}
 
-	while( !next_field(f, buffer, MAX_BUFFER) ); // discard the header
+	//while( !next_field(f, buffer, MAX_BUFFER) ); // discard the header
 
 	// Now read and print records until the end of the file
     int i = 0, score, year;
-	while(!feof(f)) {
-    
+	while(i < ARRAY_SIZE) {
+		
+		//int eor = next_field(f, buffer, MAX_BUFFER);
+		//printf("%s%c\n", buffer, ((eor)? '\n':' ' ));
         if(!next_field(f, buffer, MAX_BUFFER)){
             strcpy(Game_review[i].title, buffer);
         }
@@ -90,7 +92,63 @@ int main ( int argc, char *argv[] ) {
 
 	}
 
+	int left = 0;
+    int right = (ARRAY_SIZE-1);
+	quicksort(Game_review, left, right);
+
+
 	// Always remember to close the file
 	fclose(f);
 	return EXIT_SUCCESS;
+}
+
+void quicksort(Game Game_review[], int left, int right){
+
+    if(left < right){
+
+        int new_pivot = partition(Game_review, left, right);
+
+
+        quicksort(Game_review, left, (new_pivot -1));
+        quicksort(Game_review, (new_pivot +1), right);
+    }
+}
+
+int partition(Game Game_review[], int left, int right){
+
+
+    int pivot = Game_review[right].score;
+    int i = left;
+
+    for(int j = left; j <= (right - 1); j++){
+        if(Game_review[j].score < pivot){
+            swap(Game_review, i, j);
+            i++;
+        }
+    }
+    swap(Game_review, i, right);
+    return i;
+
+}
+
+void swap(Game Game_review[], int i, int j){
+
+    Game temp;
+
+    if(i != j){
+        temp = Game_review[j];
+        Game_review[j] = Game_review[i];
+        Game_review[i] = temp;
+    }
+}
+
+void print(Game Game_review[]){
+
+    printf("\n");
+    for(int k = ARRAY_SIZE; k >= (ARRAY_SIZE-10); k--){
+        printf("%s", Game_review[k].title);
+        printf("\n");
+    }
+    printf("\n");
+
 }

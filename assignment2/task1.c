@@ -99,7 +99,6 @@ void quicksort(int array[], int left, int right){
 
         int new_pivot = partition(array, left, right);
 
-
         quicksort(array, left, (new_pivot -1));
         quicksort(array, (new_pivot +1), right);
     }
