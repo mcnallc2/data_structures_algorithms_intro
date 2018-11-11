@@ -13,6 +13,8 @@ typedef struct Tree_Node
 
 void tree_insert(Tree_Node** root_ptr, char data); 
 Tree_Node* tree_search(Tree_Node* root, char data);
+void tree_print_sorted(Tree_Node* root);
+void tree_delete(Tree_Node* root);
 
 int main(){
 
@@ -28,33 +30,40 @@ int main(){
         tree_insert (&root, array[i]);
  
     }
-    //printf("\n---%c---\n", root->right->data);
+    printf("\nSORTED: ");
+    tree_print_sorted(root);
+    printf("\n");
+    //printf("\n---%c---\n", root->right->left->left->left->left->data);
 
 
     char search;
 
-    printf("Enter data to search for....");
-    scanf("%c\n\n", &search);
+    for(int s = 0; s < 2; s++){
 
-    search_node = tree_search(root, search);
+        search = 'A' + (rand() % 26);
+        search_node = tree_search(root, search);
 
-    if(search_node == NULL){
-        printf("Data not found");
+        printf("\n%c ", search);
+        if(search_node == NULL){
+            printf("is in tree.");
+        }
+        else{
+            printf("is not in tree.");
+        }
     }
-    else{
-        printf("Data found: ");
-        printf("%c\n", search_node->data);
-    }
 
+    printf("\n\nDELETING: ");
+    tree_delete(root);
+    
     return 0; 
 } 
 
 void tree_insert(Tree_Node** root_ptr, char data){
 
-    if(*root_ptr == NULL){
+    if((*root_ptr) == NULL){
     
-        Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
-        *root_ptr = new_node;
+        Tree_Node* new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
+        (*root_ptr) = new_node;
         (*root_ptr)->data = data;
         (*root_ptr)->left = NULL;
         (*root_ptr)->right = NULL;
@@ -76,10 +85,33 @@ Tree_Node* tree_search(Tree_Node* root, char data){
     else if(root->data == data){
         return root;
     }
-    else if(root->data < data){
-        tree_search(root->left, data);
+    else if(data < root->data){
+        //printf("\n---Going Left---\n");
+        return tree_search(root->left, data);
     }
     else{
-        tree_search(root->right, data);
+        //printf("\n---Going Right---\n");
+        return tree_search(root->right, data);
     }
+}
+
+//traversing through the tree recursively (in-order)
+void tree_print_sorted(Tree_Node* root){
+
+    if(root != NULL){
+        tree_print_sorted(root->left);
+        printf("%c ", root->data);
+        tree_print_sorted(root->right);
+    }
+}
+
+void tree_delete(Tree_Node* root){
+
+    if(root != NULL){
+        tree_delete(root->left);
+        tree_delete(root->right);
+        printf("%c ", root->data);
+        free(root);
+    }
+
 }
