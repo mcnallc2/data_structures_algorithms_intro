@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 // Write your submission in this file
 //
 // A main function and some profiling tools have already been set up to test
@@ -50,6 +51,54 @@ typedef struct Tree_Node {
 Tree_Node* root;
 int next_id;
 
+int tree_insert(Tree_Node** root_ptr, char *name, int word_count, int doc_id){
+
+    if((*root_ptr) == NULL){
+    
+        Tree_Node* new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
+        (*root_ptr) = new_node;
+        strcpy((*root_ptr)->name, name);
+		(*root_ptr)->word_count = word_count;
+		(*root_ptr)->doc_id = doc_id;
+        (*root_ptr)->left = NULL;
+        (*root_ptr)->right = NULL;
+		next_id = rand();
+		return doc_id;
+
+    }
+    else if(doc_id <= (*root_ptr)->doc_id){
+        return tree_insert(&(*root_ptr)->left, name, word_count, doc_id);
+    }
+    else{
+        return tree_insert(&(*root_ptr)->right, name, word_count, doc_id);
+    }
+}
+
+Tree_Node* tree_search(Tree_Node* search, int doc_id){
+
+    if(search == NULL){
+        return NULL;
+    }
+    else if(search->doc_id == doc_id){
+        return search;
+    }
+    else if(doc_id < search->doc_id){
+        return tree_search(search->left, doc_id);
+    }
+    else{
+        return tree_search(search->right, doc_id);
+    }
+}
+
+void
+delete_tree(Tree_Node* delete){
+	if(delete != NULL){
+        delete_tree(delete->left);
+        delete_tree(delete->right);
+        free(delete);
+    }
+}
+
 int
 bstdb_init ( void ) {
 
@@ -65,47 +114,51 @@ bstdb_init ( void ) {
 int
 bstdb_add ( char *name, int word_count ) {
 
-    int left_right;
+	return tree_insert(&root, name, word_count, next_id);
 
-    Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
-    new_node->name = name;
-	new_node->word_count = word_count;
-	new_node->doc_id = next_id;
+    // int left_right;
 
-	next_id = rand();
-    Tree_Node* prev = NULL;
-    Tree_Node* curr = NULL;
-    Tree_Node* next = NULL;
+    // Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
+    // strcpy(new_node->name, name);
+	// new_node->word_count = word_count;
+	// new_node->doc_id = next_id;
 
-	next_id = rand();
+    // Tree_Node* prev = NULL;
+    // Tree_Node* curr = NULL;
+    // Tree_Node* next = NULL;
 
-    if(root == NULL){
-        new_node->left = NULL;
-        new_node->right = NULL;
-        root = new_node;
-    }
-    else{
-        curr = root;
-        while(root != NULL){
-            if(next_id <= curr->doc_id){
-                next = curr->left;
-                left_right = 1;
-            }
-            else{
-                next = curr->right;
-                left_right = 2;
-            }
-            prev = curr;
-            curr = next;
-        }
+	// next_id = rand();
 
-        if(left_right == 1){
-            prev->left = new_node;
-        }
-        else{
-            prev->right = new_node;
-        }
-    }
+    // if(root == NULL){
+    //     new_node->left = NULL;
+    //     new_node->right = NULL;
+    //     root = new_node;
+    // }
+    // else{
+    //     curr = root;
+    //     while(curr != NULL){
+    //         if(next_id <= curr->doc_id){
+    //             next = curr->left;
+    //             left_right = 1;
+    //         }
+    //         else{
+    //             next = curr->right;
+    //             left_right = 2;
+    //         }
+    //         prev = curr;
+    //         curr = next;
+    //     }
+
+    //     if(left_right == 1){
+    //         prev->left = new_node;
+    //     }
+    //     else{
+    //         prev->right = new_node;
+    //     }
+    // }
+	// return new_node->doc_id;
+
+
 	// This function should create a new node in the binary search tree, 
 	// populate it with the name and word_count of the arguments and store
 	// the result in the tree.
@@ -120,29 +173,80 @@ bstdb_add ( char *name, int word_count ) {
 	//
 	// If something goes wrong and the data cannot be stored, this function
 	// should return -1. Otherwise it should return the ID of the new node
-	return -1;
+	//return -1;
 }
 
 int
 bstdb_get_word_count ( int doc_id ) {
+
+	return (tree_search(root, doc_id))->word_count;
+
+    // Tree_Node* curr;
+    // Tree_Node* next;
+
+    // if(root == NULL){
+    //     return -1;
+    // }
+    // else{
+    //     curr = root;
+    //     while(curr != NULL){
+	// 		if(doc_id == curr->doc_id){
+    //             return curr->word_count;
+    //         }
+    //         if(doc_id < curr->doc_id){
+    //             next = curr->left;
+    //         }
+    //         else{
+    //             next = curr->right;
+    //         }
+    //         curr = next;
+    //     }
+    //     return -1;
+    // }
+
 	// This is a search function. It should traverse the binary search tree
 	// and return the word_count of the node with the corresponding doc_id.
 	//
 	// If the required node is not found, this function should return -1
-	return -1;
 }
 
 char*
 bstdb_get_name ( int doc_id ) {
+
+	return (tree_search(root, doc_id))->name;
+
+    // Tree_Node* curr;
+    // Tree_Node* next;
+
+    // if(root == NULL){
+    //     return 0;
+    // }
+    // else{
+    //     curr = root;
+    //     while(curr != NULL){
+	// 		if(doc_id == curr->doc_id){
+    //             return curr->name;
+    //         }
+    //         if(doc_id < curr->doc_id){
+    //             next = curr->left;
+    //         }
+    //         else{
+    //             next = curr->right;
+    //         }
+    //         curr = next;
+    //     }
+    //     return 0;
+    // }
+
 	// This is a search function. It should traverse the binary search tree
 	// and return the name of the node with the corresponding doc_id.
 	//
 	// If the required node is not found, this function should return NULL or 0
-	return 0;
 }
 
 void
 bstdb_stat ( void ) {
+
 	// Use this function to show off! It will be called once after the 
 	// profiler ends. The profiler checks for execution time and simple errors,
 	// but you should use this function to demonstrate your own innovation.
@@ -165,6 +269,8 @@ bstdb_stat ( void ) {
 
 void
 bstdb_quit ( void ) {
+
+	delete_tree(root);
 	// This function will run once (and only once) when the program ends. Use
 	// it to free any memory you allocated in the course of operating the
 	// database.
