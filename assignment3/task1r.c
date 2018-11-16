@@ -1,5 +1,6 @@
 #include <stdio.h> 
 #include <stdlib.h> 
+#include <time.h>
 
 #define array_size 29
   
@@ -23,6 +24,8 @@ int main(){
 
     char array[] = {'F', 'L', 'O', 'C', 'C', 'I', 'N', 'A', 'U', 'C', 'I', 'N', 'I', 'H', 'I', 'L', 'I', 'P', 'I', 'L', 'I', 'F', 'I', 'C', 'A', 'T', 'I', 'O', 'N'};
 
+    time_t t;
+
     printf("ADDING: ");
     for(int i = 0; i < array_size; i++){
 
@@ -37,9 +40,9 @@ int main(){
 
 
     char search;
-
+    srand((unsigned) time(&t));
     for(int s = 0; s < 2; s++){
-
+        
         search = 'A' + (rand() % 26);
         search_node = tree_search(root, search);
 

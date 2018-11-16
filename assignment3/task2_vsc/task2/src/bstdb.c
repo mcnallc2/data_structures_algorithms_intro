@@ -84,59 +84,62 @@ bstdb_add ( char *name, int word_count ) {
     //     printf("\nAdding...\n");
     //     return (tree_insert(&root, name, word_count))->doc_id;
     // }
-    int doc_id = names_array[i];
 
-    if(Insert(root, name, word_count, doc_id) == NULL){
-        return -1;
-    }
-    else{
-        printf("\nAdding...\n");
-        int ret = Insert(root, name, word_count, doc_id)->doc_id;
-        return ret;
-    }
-    i++;
 
-    // int left_right;
-    //
-    // Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
-    // strcpy(new_node->name, name);
-	// new_node->word_count = word_count;
-	// new_node->doc_id = next_id;
+    // int doc_id = names_array[i];
 
-    // Tree_Node* prev = NULL;
-    // Tree_Node* curr = NULL;
-    // Tree_Node* next = NULL;
-
-	// next_id = rand();
-
-    // if(root == NULL){
-    //     new_node->left = NULL;
-    //     new_node->right = NULL;
-    //     root = new_node;
+    // if(Insert(root, name, word_count, doc_id) == NULL){
+    //     return -1;
     // }
     // else{
-    //     curr = root;
-    //     while(curr != NULL){
-    //         if(next_id <= curr->doc_id){
-    //             next = curr->left;
-    //             left_right = 1;
-    //         }
-    //         else{
-    //             next = curr->right;
-    //             left_right = 2;
-    //         }
-    //         prev = curr;
-    //         curr = next;
-    //     }
-
-    //     if(left_right == 1){
-    //         prev->left = new_node;
-    //     }
-    //     else{
-    //         prev->right = new_node;
-    //     }
+    //     printf("\nAdding...\n");
+    //     int ret = Insert(root, name, word_count, doc_id)->doc_id;
+    //     return ret;
     // }
-	// return new_node->doc_id;
+    // i++;
+	
+
+    int left_right;
+    
+    Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
+    strcpy(new_node->name, name);
+	new_node->word_count = word_count;
+	new_node->doc_id = names_array[i];
+
+    Tree_Node* prev = NULL;
+    Tree_Node* curr = NULL;
+    Tree_Node* next = NULL;
+
+	i++;
+
+    if(root == NULL){
+        new_node->left = NULL;
+        new_node->right = NULL;
+        root = new_node;
+    }
+    else{
+        curr = root;
+        while(curr != NULL){
+            if(new_node->doc_id <= curr->doc_id){
+                next = curr->left;
+                left_right = 1;
+            }
+            else{
+                next = curr->right;
+                left_right = 2;
+            }
+            prev = curr;
+            curr = next;
+        }
+
+        if(left_right == 1){
+            prev->left = new_node;
+        }
+        else{
+            prev->right = new_node;
+        }
+    }
+	return new_node->doc_id;
 
 
 	// This function should create a new node in the binary search tree, 
@@ -328,7 +331,7 @@ void unique_array(){
     }
 
     //shuffle the array
-    for(f = ARRAY_SIZE-1; f > 0; f--){
+    for(f = ARRAY_SIZE-1; f > 1; f--){
 
         j = rand() % (f - 1);
 
@@ -339,41 +342,41 @@ void unique_array(){
     }
 }
 
-Tree_Node* Insert(Tree_Node *root, char *name, int word_count, int doc_id)
-{
+// Tree_Node* Insert(Tree_Node *root, char *name, int word_count, int doc_id)
+// {
 
-    if(!root)                              //Explicitly insert into head if it is NULL
-    {
-        root = malloc(sizeof *root);
-        strcpy(root->name, name);
-		root->word_count = word_count;
-		root->doc_id = doc_id;
-        root->left = NULL;
-        root->right = NULL;
-        return root;
-    }
+//     if(!root)                              //Explicitly insert into head if it is NULL
+//     {
+//         root = malloc(sizeof *root);
+//         strcpy(root->name, name);
+// 		root->word_count = word_count;
+// 		root->doc_id = doc_id;
+//         root->left = NULL;
+//         root->right = NULL;
+//         return root;
+//     }
 
-    for(Tree_Node *temp = root, *temp2 = root; ;(temp = (names_array[i] > temp->doc_id)?(temp->right):(temp->left)))
-    {
-        if(temp == NULL)
-        {
-            temp = malloc(sizeof *temp);
-            strcpy(temp->name, name);
-		    temp->word_count = word_count;
-		    temp->doc_id = doc_id;
-            temp->left = NULL;
-            temp->right = NULL;
+//     for(Tree_Node *temp = root, *temp2 = root; ;(temp = (names_array[i] > temp->doc_id)?(temp->right):(temp->left)))
+//     {
+//         if(temp == NULL)
+//         {
+//             temp = malloc(sizeof *temp);
+//             strcpy(temp->name, name);
+// 		    temp->word_count = word_count;
+// 		    temp->doc_id = doc_id;
+//             temp->left = NULL;
+//             temp->right = NULL;
 
-            if(names_array[i] > temp2->doc_id)  //update previous nodes left or right pointer accordingly 
-                temp2->right = temp;
-            else
-                temp2->left = temp;
+//             if(names_array[i] > temp2->doc_id)  //update previous nodes left or right pointer accordingly 
+//                 temp2->right = temp;
+//             else
+//                 temp2->left = temp;
 
-            break;
-        }
+//             break;
+//         }
 
-        temp2 = temp;      //Use a another pointer to store previous value of node
-    }
+//         temp2 = temp;      //Use a another pointer to store previous value of node
+//     }
 
-    return root;
-}
+//     return root;
+// }
