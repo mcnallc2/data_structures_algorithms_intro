@@ -38,6 +38,8 @@
 // need more functionality than what is provided by these 6 functions, you
 // may write additional functions in this file.
 
+#define ARRAY_SIZE 100000
+
 typedef struct Tree_Node {
 
     int doc_id;           // unique identifier for the document
@@ -49,61 +51,22 @@ typedef struct Tree_Node {
 }Tree_Node;
 
 Tree_Node* root;
-int next_id;
+int i;
+int names_array[ARRAY_SIZE];
 
-int tree_insert(Tree_Node** root_ptr, char *name, int word_count, int doc_id){
-
-    if((*root_ptr) == NULL){
-    
-        Tree_Node* new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
-        (*root_ptr) = new_node;
-        strcpy((*root_ptr)->name, name);
-		(*root_ptr)->word_count = word_count;
-		(*root_ptr)->doc_id = doc_id;
-        (*root_ptr)->left = NULL;
-        (*root_ptr)->right = NULL;
-		next_id = rand();
-		return doc_id;
-
-    }
-    else if(doc_id <= (*root_ptr)->doc_id){
-        return tree_insert(&(*root_ptr)->left, name, word_count, doc_id);
-    }
-    else{
-        return tree_insert(&(*root_ptr)->right, name, word_count, doc_id);
-    }
-}
-
-Tree_Node* tree_search(Tree_Node* search, int doc_id){
-
-    if(search == NULL){
-        return NULL;
-    }
-    else if(search->doc_id == doc_id){
-        return search;
-    }
-    else if(doc_id < search->doc_id){
-        return tree_search(search->left, doc_id);
-    }
-    else{
-        return tree_search(search->right, doc_id);
-    }
-}
-
-void
-delete_tree(Tree_Node* delete){
-	if(delete != NULL){
-        delete_tree(delete->left);
-        delete_tree(delete->right);
-        free(delete);
-    }
-}
+Tree_Node* tree_insert(Tree_Node** root_ptr, char *name, int word_count);
+Tree_Node* Insert(Tree_Node *root, char *name, int word_count, int doc_id);
+Tree_Node* tree_search(Tree_Node* search, int doc_id);
+void delete_tree(Tree_Node* delete);
+void unique_array();
 
 int
 bstdb_init ( void ) {
 
 	root = NULL;
-	next_id = rand();
+	i = 0;
+    unique_array();
+    printf("\ninit\n");
 	// This function will run once (and only once) when the database first
 	// starts. Use it to allocate any memory you want to use or initialize 
 	// some globals if you need to. Function should return 1 if initialization
@@ -114,10 +77,27 @@ bstdb_init ( void ) {
 int
 bstdb_add ( char *name, int word_count ) {
 
-	return tree_insert(&root, name, word_count, next_id);
+	// if(!tree_insert(&root, name, word_count)){
+    //     return -1;
+    // }
+    // else{
+    //     printf("\nAdding...\n");
+    //     return (tree_insert(&root, name, word_count))->doc_id;
+    // }
+    int doc_id = names_array[i];
+
+    if(Insert(root, name, word_count, doc_id) == NULL){
+        return -1;
+    }
+    else{
+        printf("\nAdding...\n");
+        int ret = Insert(root, name, word_count, doc_id)->doc_id;
+        return ret;
+    }
+    i++;
 
     // int left_right;
-
+    //
     // Tree_Node *new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
     // strcpy(new_node->name, name);
 	// new_node->word_count = word_count;
@@ -179,7 +159,13 @@ bstdb_add ( char *name, int word_count ) {
 int
 bstdb_get_word_count ( int doc_id ) {
 
-	return (tree_search(root, doc_id))->word_count;
+    Tree_Node *p = tree_search(root, doc_id);
+    if(p == NULL){
+        return -1;
+    }
+    else{
+        return p->word_count;
+    }
 
     // Tree_Node* curr;
     // Tree_Node* next;
@@ -213,7 +199,13 @@ bstdb_get_word_count ( int doc_id ) {
 char*
 bstdb_get_name ( int doc_id ) {
 
-	return (tree_search(root, doc_id))->name;
+	Tree_Node *p = tree_search(root, doc_id);
+    if(p == NULL){
+        return 0;
+    }
+    else{
+        return p->name;
+    }
 
     // Tree_Node* curr;
     // Tree_Node* next;
@@ -274,4 +266,114 @@ bstdb_quit ( void ) {
 	// This function will run once (and only once) when the program ends. Use
 	// it to free any memory you allocated in the course of operating the
 	// database.
+}
+
+
+Tree_Node* tree_insert(Tree_Node** root_ptr, char *name, int word_count){
+
+    if((*root_ptr) == NULL){
+    
+        Tree_Node* new_node = (Tree_Node*)malloc(sizeof(Tree_Node));
+        (*root_ptr) = new_node;
+        strcpy((*root_ptr)->name, name);
+		(*root_ptr)->word_count = word_count;
+		(*root_ptr)->doc_id = names_array[i];
+        i++;
+        (*root_ptr)->left = NULL;
+        (*root_ptr)->right = NULL;
+		return (*root_ptr);
+
+    }
+    else if(names_array[i] <= (*root_ptr)->doc_id){
+        return tree_insert(&(*root_ptr)->left, name, word_count);
+    }
+    else{
+        return tree_insert(&(*root_ptr)->right, name, word_count);
+    }
+}
+
+
+
+Tree_Node* tree_search(Tree_Node* search, int doc_id){
+
+    if(search == NULL){
+        return NULL;
+    }
+    else if(search->doc_id == doc_id){
+        return search;
+    }
+    else if(doc_id < search->doc_id){
+        return tree_search(search->left, doc_id);
+    }
+    else{
+        return tree_search(search->right, doc_id);
+    }
+}
+
+void
+delete_tree(Tree_Node* delete){
+	if(delete != NULL){
+        delete_tree(delete->left);
+        delete_tree(delete->right);
+        free(delete);
+    }
+}
+
+void unique_array(){
+
+    int temp, f, j;
+    //fill a uniform array
+    for(f = 0; f < ARRAY_SIZE; f++){
+        names_array[f] = f;
+    }
+
+    //shuffle the array
+    for(f = ARRAY_SIZE-1; f > 0; f--){
+
+        j = rand() % (f - 1);
+
+        //swap two indexs
+        temp = names_array[j];
+        names_array[j] = names_array[f];
+        names_array[f] = temp;
+    }
+}
+
+Tree_Node* Insert(Tree_Node *root, char *name, int word_count, int doc_id)
+{
+
+    if(!root)                              //Explicitly insert into head if it is NULL
+    {
+        root = malloc(sizeof *root);
+        strcpy(root->name, name);
+		root->word_count = word_count;
+		root->doc_id = doc_id;
+        root->left = NULL;
+        root->right = NULL;
+        return root;
+    }
+
+    for(Tree_Node *temp = root, *temp2 = root; ;(temp = (names_array[i] > temp->doc_id)?(temp->right):(temp->left)))
+    {
+        if(temp == NULL)
+        {
+            temp = malloc(sizeof *temp);
+            strcpy(temp->name, name);
+		    temp->word_count = word_count;
+		    temp->doc_id = doc_id;
+            temp->left = NULL;
+            temp->right = NULL;
+
+            if(names_array[i] > temp2->doc_id)  //update previous nodes left or right pointer accordingly 
+                temp2->right = temp;
+            else
+                temp2->left = temp;
+
+            break;
+        }
+
+        temp2 = temp;      //Use a another pointer to store previous value of node
+    }
+
+    return root;
 }

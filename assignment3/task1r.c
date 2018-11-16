@@ -43,12 +43,13 @@ int main(){
         search = 'A' + (rand() % 26);
         search_node = tree_search(root, search);
 
-        printf("\n%c ", search);
         if(search_node == NULL){
-            printf("is in tree.");
+            printf("\n%c ", search);
+            printf("is not in tree.");
         }
         else{
-            printf("is not in tree.");
+            printf("\n%c ", search_node->data);
+            printf("is in tree.");
         }
     }
 

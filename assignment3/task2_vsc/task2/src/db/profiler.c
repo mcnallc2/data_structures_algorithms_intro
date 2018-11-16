@@ -205,7 +205,7 @@ box_muller ( double mu, double sigma ) {
     }
 
     // get the angle and radius we'll use to generate the new random values
-    a = 2 * M_PI * (rand()/(double)RAND_MAX); 
+    a = 2 * 3.14 * (rand()/(double)RAND_MAX); 
     r = sqrt(-2 * log(rand()/(double)RAND_MAX));
 
     // generate two new Gaussian distributed values from sides of triangle
