@@ -12,12 +12,21 @@ typedef struct node {
 
 }node; 
 
+typedef struct queue { 
+
+    char name;
+    struct queue* next; 
+
+}queue; 
+
+int nodes_printed = 0 ;
 
 node* Add_Node(char name); 
 void Add_Edge(node* start, node* end); 
 void Set_Flags(node* nodes[]);
 void DFS_Graph(node* root);
 void BFS_Graph(node* root);
+void Print_Connections(node * root);
 
 int main(){ 
 
@@ -111,12 +120,31 @@ void DFS_Graph(node* root) {
     }
 }
 
-void BFS_Graph(node* root) { 
+void BFS_Graph(node* root){ 
 
     if(root->flag != 1){
         printf("%c ", root->name);
         root->flag = 1;
     }
+    Print_Connections(root);
+    nodes_printed++;
+
+    int i = 0;
+    node* curr = root->next[i];
+
+    if(nodes_printed != N_COUNT){
+
+        while(curr != NULL){
+
+            BFS_Graph(curr);  
+
+            i++;
+            curr = root->next[i];
+        }
+    }
+}
+
+void Print_Connections(node * root){
 
     int i = 0;
     node* curr = root->next[i];
@@ -130,14 +158,27 @@ void BFS_Graph(node* root) {
         curr = root->next[i];
     }
 
-    // i = 0;
-    // curr = root->next[i];
-    // while(curr != NULL){
-    //     BFS_Graph(curr);
-    //     curr->flag = 1;
-    //     i++;
-    //     curr = root->next[i];
-    // }
 }
 
 
+// void Push(node* add_node){ 
+
+//     queue* New_Node = (queue*)malloc(sizeof(queue)); 
+
+//     New_Node->name = add_node->name;
+//     head = New_Node;
+//     New_Node->next = NULL;
+    
+// }
+
+// void Pop(node* remove_node){ 
+
+//     queue* curr = head;
+//     while(curr != NULL){
+//         if(curr = head){
+//             head = curr->next;
+//             free(curr);
+//         }
+//     }
+
+// }
