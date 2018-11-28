@@ -12,14 +12,12 @@ typedef struct node {
 
 }node; 
 
-typedef struct queue { 
+// typedef struct queue { 
 
-    char name;
-    struct queue* next; 
+//     char name;
+//     struct queue* next; 
 
-}queue; 
-
-int nodes_printed = 0 ;
+// }queue; 
 
 node* Add_Node(char name); 
 void Add_Edge(node* start, node* end); 
@@ -71,6 +69,7 @@ int main(){
     return 0; 
 } 
 
+//function creates a new vertex and sets its attributes
 node* Add_Node(char name){
 
     node* New_Node = (node*)malloc(sizeof(node)); 
@@ -82,6 +81,7 @@ node* Add_Node(char name){
     return New_Node;
 }
 
+//function to add edges between vertices using the next pointers
 void Add_Edge(node* start, node* end){
     
     int i = 0;
@@ -96,6 +96,7 @@ void Add_Edge(node* start, node* end){
 
 }
 
+//resets all the visited flags to unvisited
 void Set_Flags(node* nodes[]){
 
     for(int i = 0; i < N_COUNT; i++){
@@ -103,15 +104,19 @@ void Set_Flags(node* nodes[]){
     }
 }
 
+//performs Depth First Search on the graph using recursion
 void DFS_Graph(node* root) { 
 
+    //if the vertex is not visited
     if(root->flag != 1){
 
+        //print the name and mark as visited
         printf("%c ", root->name);
         root->flag = 1;
         int i = 0;
         node* curr = root->next[i];
 
+        //recursive call this function on all the neighbours
         while(curr != NULL){
             DFS_Graph(curr);
             i++;
@@ -120,30 +125,31 @@ void DFS_Graph(node* root) {
     }
 }
 
+//performs Breath First Search on the graph using recursion
 void BFS_Graph(node* root){ 
 
+    //if the flag is not print the vertex and change the flag
     if(root->flag != 1){
         printf("%c ", root->name);
         root->flag = 1;
     }
+    //print all neighbours that havent been visited
     Print_Connections(root);
-    nodes_printed++;
 
     int i = 0;
     node* curr = root->next[i];
 
-    if(nodes_printed != N_COUNT){
+    //print all the neighrbours for ech neighbour that havent been visited
+    while(curr != NULL){
 
-        while(curr != NULL){
+        Print_Connections(curr);  
 
-            BFS_Graph(curr);  
-
-            i++;
-            curr = root->next[i];
-        }
+        i++;
+        curr = root->next[i];
     }
 }
 
+//prints all the neighbours that havent been visited for a node
 void Print_Connections(node * root){
 
     int i = 0;

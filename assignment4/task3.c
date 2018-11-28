@@ -42,26 +42,26 @@ int main ( int argc, char *argv[] ) {
 	}
     //printf("opening %s\n", argv[1]); 
 
-    while(!parce_vertices(vertices, buffer, MAX_BUFFER));
+    while(!parcer(vertices, buffer, MAX_BUFFER));
 	
     int eor;
     int index;
 	while(!feof(vertices)) {
 
-		eor = parce_vertices(vertices, buffer, MAX_BUFFER );
+		eor = parcer(vertices, buffer, MAX_BUFFER );
         index = atoi(buffer);
         //printf("%s, ", buffer);
         ID[index] = index;
     
-        eor = parce_vertices(vertices, buffer, MAX_BUFFER );
+        eor = parcer(vertices, buffer, MAX_BUFFER );
         //printf("%s, ", buffer);
         Name[index] = buffer;
 
-        eor = parce_vertices(vertices, buffer, MAX_BUFFER );
+        eor = parcer(vertices, buffer, MAX_BUFFER );
         //printf("%s, ", buffer);
         Latitude[index] = buffer;
 
-        eor = parce_vertices(vertices, buffer, MAX_BUFFER );
+        eor = parcer(vertices, buffer, MAX_BUFFER );
         //printf("%s\n", buffer);
         Longitude[index] = buffer;
 
@@ -77,32 +77,32 @@ int main ( int argc, char *argv[] ) {
 	}
     //printf("opening %s\n", argv[2]); 
 
-    while(!parce_edges(edges, buffer2, MAX_BUFFER));
+    while(!parcer(edges, buffer2, MAX_BUFFER));
 	
     int v1, v2, weight;
 	while(!feof(edges)) {
 
-		eor = parce_edges(edges, buffer2, MAX_BUFFER);
+		eor = parcer(edges, buffer2, MAX_BUFFER);
 		if(eor = 1){
             i++;
         }
         v1 = atoi(buffer2);
         V1[i] = v1;
     
-        eor = parce_edges(edges, buffer2, MAX_BUFFER);
+        eor = parcer(edges, buffer2, MAX_BUFFER);
 		if(eor = 1){
             i++;
         }
         v2 = atoi(buffer2);
         V2[i] = v2;
 
-        eor = parce_edges(edges, buffer2, MAX_BUFFER);
+        eor = parcer(edges, buffer2, MAX_BUFFER);
 		if(eor = 1){
             i++;
         }
         weight = atoi(buffer2);
         Weight[i] = weight;
-        printf("%d\t", weight);
+        //printf("%d\t", weight);
 
 	}
     //printf("\nparced edges\n");
@@ -134,19 +134,19 @@ int main ( int argc, char *argv[] ) {
 }
 
 
-// The vertices parser
-int parce_vertices(FILE *vertices, char *buf, int max) {
+// The parser
+int parcer(FILE *file, char *buf, int max) {
 
 	int i=0, end=0, quoted=0;
 	
 	for(;;) {
 		// fetch the next character from file		
-		buf[i] = fgetc(vertices);
+		buf[i] = fgetc(file);
         
 		// if we encounter quotes then flip our state and immediately fetch next char
 		if(buf[i]=='"'){ 
             quoted = !quoted; 
-            buf[i] = fgetc(vertices);
+            buf[i] = fgetc(file);
         }
 
 		// end of field on comma if we're not inside quotes
@@ -155,41 +155,7 @@ int parce_vertices(FILE *vertices, char *buf, int max) {
         }
 
 		// end record on newline or end of file
-		if(feof(vertices) || buf[i]=='\n'){ 
-            end = 1; 
-            break;
-        } 
-
-		// truncate fields that would overflow the buffer
-		if(i < max-1){ 
-            ++i;
-        } 
-	}
-	buf[i] = 0; // null terminate the string
-	return end; // flag stating whether or not this is end of the line
-}
-
-int parce_edges(FILE *edges, char *buf, int max) {
-
-	int i=0, end=0, quoted=0;
-	
-	for(;;) {
-		// fetch the next character from file		
-		buf[i] = fgetc(edges);
-        
-		// if we encounter quotes then flip our state and immediately fetch next char
-		if(buf[i]=='"'){ 
-            quoted = !quoted; 
-            buf[i] = fgetc(edges);
-        }
-
-		// end of field on comma if we're not inside quotes
-		if(buf[i]==',' && !quoted){ 
-            break;
-        }
-
-		// end record on newline or end of file
-		if(feof(edges) || buf[i]=='\n'){ 
+		if(feof(file) || buf[i]=='\n'){ 
             end = 1; 
             break;
         } 

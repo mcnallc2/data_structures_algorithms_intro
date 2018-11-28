@@ -98,6 +98,7 @@ void dijkstra(int graph[SIZE][SIZE], int start){
             print_vertex(predeccesor);
         }
     }
+    printf("\n\n");
 }
 
 //function to print the corresponding char for each index
